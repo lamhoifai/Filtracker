@@ -16,7 +16,7 @@
 <h4>{{ _('AutoPrint Settings') }}</h4>
 <label class="control-label">{{ _('Layer Height (mm)') }}</label>
 <div class="controls">
-    <input type="text" class="input-block-level" data-bind="value: settings.plugins.SD3D.layerHeight">
+    <input type="number" style="width: 150px" data-bind="slider: {min: 0.05, max: 1.0, step: 0.05, value: settings.plugins.SD3D.layerHeight">
 </div>
 <label class="control-label">{{ _('Infill percentage (1-100)') }}</label>
 <div class="controls">
