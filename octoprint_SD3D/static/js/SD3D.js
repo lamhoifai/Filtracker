@@ -204,7 +204,7 @@ $(function() {
             var element = $("#state").find(".accordion-inner .progress");
             if (element.length) {
                 var text0 = gettext("Material");
-                var text = gettext("Material Diameter (mm)");
+                var text = gettext("Diameter (mm)");
                 var text2 = gettext("Color");
                 var text3 = gettext("Length (m)");
                 var text4 = gettext("MUID");
