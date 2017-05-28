@@ -45,7 +45,7 @@ $(function() {
                     url: install_url,
                     success: function(data) {
                                              if (data.hasOwnProperty('result')){
-                                                   alert("Install completed successfully");
+                                                   alert("Install completed successfully. Click finish to proceed.");
                                                 }
 
                                                 else if (data.hasOwnProperty('error')){
@@ -71,7 +71,7 @@ $(function() {
                         setQRData(data.result);
 
                         if (data.hasOwnProperty('sd3d_error')){
-                            alert("WARNING - remote sd3d connection error: " + data.sd3d_error);
+                            alert("WARNING - " + data.sd3d_error);
                         }
                         else{
                             new PNotify({
@@ -227,7 +227,7 @@ $(function() {
          self.onEventPrintPaused = self.updateSettings;
          self.onPrintResumed = self.updateSettings;
 
-            var code = '<div class="jog-panel"> <!-- QR Code control panel --> <div class="jog-panel" id="scan-qr-code"> <h1>QR Code</h1><div> <button class="btn btn-block control-box" id="qr-btn" data-bind="enable: isOperational() && !isPrinting() && loginState.isUser(), click: function() { } ">Scan QR</button></div></div></div>';
+            var code = '<div class="jog-panel"> <!-- QR Code control panel --> <div class="jog-panel" id="scan-qr-code"> <h1>Material</h1><div> <button class="btn btn-block control-box" id="qr-btn" data-bind="enable: isOperational() && !isPrinting() && loginState.isUser(), click: function() { } ">Scan QR</button></div></div></div>';
 
             var controlElement = $("#control");
 
