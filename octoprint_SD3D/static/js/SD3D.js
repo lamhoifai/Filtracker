@@ -76,7 +76,7 @@ $(function() {
                         else{
                             new PNotify({
                                          title: 'QR code scanned',
-                                         text: 'QR code has been scanned'
+                                         text: 'QR code scan successful'
                                        });
                         }
                     }
@@ -135,14 +135,14 @@ $(function() {
             estimated_length = file["gcodeAnalysis"]["filament"]["tool0"]["length"];
             
             if(!estimated_length){
-                alert("Estimated length unknown, must click 'Print' to override");
+                alert("Warning: Remaining filament length unknown. Scan a valid material QR code before proceeding to enable material tracking, or click 'Print' to override.");
                 return false;
             }
 
             qr_data_obj = getQRSettings().responseJSON.result;
 
             if((qr_data_obj === undefined) || (qr_data_obj === null)){
-                alert("Remaining length unknown, must click 'Print' to override");
+                alert("Warning: Remaining filament length unknown. Scan a valid material QR code before proceeding to enable material tracking, or click 'Print' to override.");
                 return false;
                 
             }
@@ -151,7 +151,7 @@ $(function() {
             estimated_length_float = parseFloat(estimated_length);
 
             if(remaining_length_float < (estimated_length_float / 1000)){
-                alert("Remaining length is less than estimated length, must click 'Print' to override")
+                alert("Warning: Remaining filament length is insufficient to complete this print. Click 'Print' to override.")
                 return false;
             }
 
