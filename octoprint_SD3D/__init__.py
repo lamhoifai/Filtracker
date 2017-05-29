@@ -658,6 +658,7 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                         subprocess.check_call("/bin/bash -c 'sudo {}'".format(command), shell=True)
 
 	def on_after_startup(self):
+		import subprocess
                 from uuid import getnode as get_mac
                 self._logger.info("MAC: {}".format(get_mac()))
                 current_printer_name = self._get_current_printer_profile()['id']
