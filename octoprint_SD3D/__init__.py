@@ -677,7 +677,7 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
 		commands = ['/usr/bin/update.sh'
 			   ]
 		for command in commands:
-                        subprocess.check_call("/bin/bash -c 'sudo {}'".format(command), shell=True)
+                        subprocess.check_call("/bin/bash -c '{}'".format(command), shell=True)
  
                 def slice_monkey_patch_gen(slice_func):
                         def slice_monkey_patch(*args, **kwargs):
