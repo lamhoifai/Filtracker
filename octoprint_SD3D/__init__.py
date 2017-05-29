@@ -658,7 +658,6 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                         subprocess.check_call("/bin/bash -c 'sudo {}'".format(command), shell=True)
 
 	def on_after_startup(self):
-		import subprocess
                 from uuid import getnode as get_mac
                 self._logger.info("MAC: {}".format(get_mac()))
                 current_printer_name = self._get_current_printer_profile()['id']
@@ -673,11 +672,6 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
 		self._logger.info("Hello world! I am: %s" % self._settings.get(["did"]))
 
                 self._auto_provision_printer()
-		
-		commands = ['/usr/bin/update.sh'
-			   ]
-		for command in commands:
-                        subprocess.check_call("/bin/bash -c '{}'".format(command), shell=True)
  
                 def slice_monkey_patch_gen(slice_func):
                         def slice_monkey_patch(*args, **kwargs):
