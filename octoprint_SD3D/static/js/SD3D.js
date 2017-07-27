@@ -75,8 +75,8 @@ $(function() {
                         }
                         else{
                             new PNotify({
-                                         title: 'QR code scan successful',
-				         type: 'success',
+                                         title:'QR code scan successful',
+                                         type: 'success',
                                          text: 'Material attributes have been updated'
                                        });
                         }
@@ -95,6 +95,7 @@ $(function() {
                 }
         }});
         }
+
 
         function getQRSettings(){
 
@@ -140,6 +141,7 @@ $(function() {
                 return false;
             }
 
+
             qr_data_obj = getQRSettings().responseJSON.result;
 
             if((qr_data_obj === undefined) || (qr_data_obj === null)){
@@ -152,12 +154,14 @@ $(function() {
             estimated_length_float = parseFloat(estimated_length);
 
             if(remaining_length_float < (estimated_length_float / 1000)){
-                alert("Warning: Remaining filament length is insufficient to complete this print. Click 'Print' to override.")
+                alert("Warning: Remaining filament length is insufficient to complete this print. Click 'Print' to override.");
                 return false;
             }
 
+
             return true;
         }
+
 
 
         function sd3dLoadFile(file, printAfterLoad){
@@ -170,6 +174,7 @@ $(function() {
             var print = printAfterLoad && withinPrintDimensions && adequateLength;
 
             OctoPrint.files.select(file.origin, file.path, print);
+
 
         }
 
@@ -186,6 +191,7 @@ $(function() {
                                                 if (data.hasOwnProperty('result')){
                                                     if(data.result === true){
                                                         $("#slicing_configuration_dialog").modal("hide");
+
                                                     }
                                                    
                                                 }
@@ -235,6 +241,7 @@ $(function() {
             controlElement.append(code);
 
             $( "#qr-btn" ).bind( "click", function() {
+
                 apiFetch();
             });
      
