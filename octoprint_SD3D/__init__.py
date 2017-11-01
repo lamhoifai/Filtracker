@@ -651,7 +651,7 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                 except Exception as e:
                         raise Exception("Fill density setting {} is invalid, must be percentage (integer)".format(fill_density))
 
-                commands = ['/usr/bin/apt-get update', '/usr/bin/git clone https://github.com/Locbit/locbit-edge.git /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge',
+                commands = ['/usr/bin/apt-get update',
                             '/usr/bin/apt-get install -y ipython python-opencv python-scipy python-numpy python-setuptools python-pip python-pygame python-zbar',
                             '/bin/chmod +x /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/qr.py',
                             '/usr/bin/pip install --upgrade pip',
@@ -663,6 +663,7 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                         subprocess.check_call("/bin/bash -c 'sudo {}'".format(command), shell=True)
 
 	def on_after_startup(self):
+                import subprocess, os
                 from uuid import getnode as get_mac
                 self._logger.info("MAC: {}".format(get_mac()))
                 current_printer_name = self._get_current_printer_profile()['id']
@@ -677,7 +678,20 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
 		self._logger.info("Hello world! I am: %s" % self._settings.get(["did"]))
 
                 self._auto_provision_printer()
- 
+
+                def edge_check(self):
+                        edge_exist = '/home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge'
+                        path_check = os.path.isdir(edge_exist)
+                        edge_url = '/usr/bin/git clone https://github.com/Locbit/locbit-edge.git /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge'
+                        start_check = self._settings.get(["did"])
+                        if start_check == True:
+
+                                if path_check == True:
+                                        self._logger.info("Locbit-Edge already exist.")
+                                else:
+                                        subprocess.call(edge_url, shell=True)
+                                        self._logger.info()
+
                 def slice_monkey_patch_gen(slice_func):
                         def slice_monkey_patch(*args, **kwargs):
 
