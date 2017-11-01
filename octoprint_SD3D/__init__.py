@@ -651,12 +651,12 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                 except Exception as e:
                         raise Exception("Fill density setting {} is invalid, must be percentage (integer)".format(fill_density))
 
-                commands = ['/usr/bin/apt-get update',
+                commands = ['/usr/bin/apt-get update', '/usr/bin/git clone https://github.com/Locbit/locbit-edge.git /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D',
                             '/usr/bin/apt-get install -y ipython python-opencv python-scipy python-numpy python-setuptools python-pip python-pygame python-zbar',
                             '/bin/chmod +x /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/qr.py',
                             '/usr/bin/pip install --upgrade pip',
-                            '/usr/local/bin/pip --no-cache-dir install timeout-decorator svgwrite https://github.com/sightmachine/SimpleCV/zipball/master',
-                            '/usr/bin/git clone https://github.com/Locbit/locbit-edge.git /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D'
+                            '/usr/local/bin/pip --no-cache-dir install timeout-decorator svgwrite https://github.com/sightmachine/SimpleCV/zipball/master'
+                            
                            ]
 
                 for command in commands:
