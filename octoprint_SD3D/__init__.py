@@ -682,7 +682,7 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                 def edge_check(self):
                         edge_exist = '/home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge'
                         path_check = os.path.isdir(edge_exist)
-                        edge_url = '/usr/bin/git clone https://github.com/Locbit/locbit-edge.git /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge'
+                        edge_url = 'git clone https://github.com/Locbit/locbit-edge.git /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge'
                         start_check = self._settings.get(["did"])
                         if start_check == True:
 
