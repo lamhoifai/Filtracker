@@ -726,6 +726,18 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                         return slice_monkey_patch
 
                 octoprint.slicing.SlicingManager.slice = slice_monkey_patch_gen(octoprint.slicing.SlicingManager.slice)
+                edge_path = '/home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge'
+                path_check = os.path.isdir(edge_path)
+                edge_url = '/usr/bin/git clone https://github.com/Locbit/locbit-edge.git ~/oprint/lib/python2.7/site-packages/octoprint_SD3D'
+
+                if self._settings.get(['macaddress']) is not None:
+                        while path_check != True:
+                                subprocess.call(edge_url.format(), shell=True)
+                                print("THIS BETTER WORK!")
+                                return self._logger.info(path_check)
+                                
+                        else:
+                                return
 
 	def get_settings_defaults(self):
 		return dict(did='',
@@ -913,19 +925,6 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                         return True
 
                 print('5' * 20 + "{}".format(self._settings.get(['macAddress'])))
-        def edge_check(self):
-                edge_path = '/home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge'
-                path_check = os.path.isdir(edge_path)
-                edge_url = '/usr/bin/git clone https://github.com/Locbit/locbit-edge.git ~/oprint/lib/python2.7/site-packages/octoprint_SD3D'
-
-                if self._settings.get(['macaddress']) is not None:
-                        while path_check != True:
-                                subprocess.call(edge_url.format(), shell=True)
-                                print("THIS BETTER WORK!")
-                                return self._logger.info(path_check)
-                                
-                        else:
-                                return
-
+                
 __plugin_name__ = "Filtracker"
 __plugin_implementation__ = SD3DPlugin()
