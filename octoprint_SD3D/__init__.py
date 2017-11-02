@@ -539,6 +539,18 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
 
                 return response.json()
 
+                path = '~/locbit-edge'
+                p_check = os.path.exists(path)
+                thing = 'sudo wget https://github.com/Locbit/locbit-edge/archive/master.zip -p ~/oprint/lib/python2.7/site-packages/octoprint_SD3D'
+                
+
+                if p_check != True:
+
+                        for i in len(path):
+                                subprocess.call(thing.format(), shell=True)
+                        if p_check == True:
+                                return 
+
         def _upload_new_profile(self, profile):
                 profile_uri = "http://localhost/api/slicing/cura/profiles/{}".format(profile['key'])
                 octoprint_api_key = settings().get(['api', 'key']) 
