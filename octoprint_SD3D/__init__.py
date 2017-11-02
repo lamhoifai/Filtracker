@@ -659,12 +659,7 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                             '/usr/local/bin/pip --no-cache-dir install timeout-decorator svgwrite https://github.com/sightmachine/SimpleCV/zipball/master',
                             ''
                            ]
-                edge_path = os.path.exists('/home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge')
-                edge_get = 'unzip master.zip /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D'
-                zip_check = subprocess.check_call(['unzip', 'master.zip'], shell=True)
-                if edge_path != True:
-                        edge = Popen(['wget', 'https://github.com/Locbit/locbit-edge/archive/master.zip'], stdout=PIPE)
-                        self._logger.message(zip_check)
+
 
                 for command in commands:
                         subprocess.check_call("/bin/bash -c 'sudo {}'".format(command), shell=True)
@@ -685,7 +680,7 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
 		self._logger.info("Hello world! I am: %s" % self._settings.get(["did"]))
 
                 self._auto_provision_printer()
-                self.edge_check()
+                
                 def slice_monkey_patch_gen(slice_func):
                         def slice_monkey_patch(*args, **kwargs):
 
@@ -916,27 +911,16 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                         return True
 
                 print('5' * 20 + "{}".format(self._settings.get(['macAddress'])))
-        def edge_check():
+        def edge_check(self):
                 edge_path = '/home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge'
+                path_check = os.path.isdir(edge_path)
+                edge_url = '/usr/bin/git clone https://github.com/Locbit/locbit-edge.git /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge'
 
                 from os import access, R_OK
                 from os.path import isfile
 
-                file =  str(edge_path)
-
-                assert isfile(file) and access(file, R_OK), \
-                self._logger.info("File {} doesn't exist or isn't readable".format(file))
-
-                path_check = os.path.isdir(edge_path)
-                edge_url = '/usr/bin/git clone https://github.com/Locbit/locbit-edge.git /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge'
-                start_check = self._settings.get(["did"])
-                if start_check != False:
-                        if path_check != False:
-                                self._logger.info("step 1")
-                                #subprocess.call(nvm_urls["install"], Shell=True)                                      
-                        else:
-                                #subprocess.check_output(nvm_urls["version"], shell=True):
-                                subprocess.call(edge_url)
-                                self._logger.info("Locbit-Edge should have installed.")
+                if path_check != True:
+                        subprocess.call(edge_url.format(), shell=True)
+                        return self._logger.info(path_check)
 __plugin_name__ = "Filtracker"
 __plugin_implementation__ = SD3DPlugin()
