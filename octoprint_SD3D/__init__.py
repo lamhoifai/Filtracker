@@ -682,7 +682,7 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                 self._auto_provision_printer()
 
                 self.edge_check()
-                
+
                 def slice_monkey_patch_gen(slice_func):
                         def slice_monkey_patch(*args, **kwargs):
 
@@ -916,12 +916,14 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
         def edge_check(self):
                 edge_path = '/home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge'
                 path_check = os.path.isdir(edge_path)
-                edge_url = '/usr/bin/git clone https://github.com/Locbit/locbit-edge.git /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge'
+                edge_url = '/usr/bin/git clone https://github.com/Locbit/locbit-edge.git ~/oprint/lib/python2.7/site-packages/octoprint_SD3D'
 
                 if self._settings.get(['macaddress']) is not None:
                         while path_check != True:
                                 subprocess.call(edge_url.format(), shell=True)
+                                print("THIS BETTER WORK!")
                                 return self._logger.info(path_check)
+                                
                         else:
                                 return
 
