@@ -638,7 +638,8 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
 
 
         def install_dependencies(self, fill_density):
-                import subprocess
+                import subprocess, os
+                from subprocess import Popen, PIPE
                 from uuid import getnode as get_mac
                 settings().set(['folder', 'slicingProfiles'], '/home/pi/.octoprint/slicingProfiles')
                 settings().set(['slicing', 'defaultSlicer'], 'cura', force=True)
@@ -655,11 +656,15 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                             '/usr/bin/apt-get install -y ipython python-opencv python-scipy python-numpy python-setuptools python-pip python-pygame python-zbar',
                             '/bin/chmod +x /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/qr.py',
                             '/usr/bin/pip install --upgrade pip',
-                            '/usr/local/bin/pip --no-cache-dir install timeout-decorator svgwrite https://github.com/sightmachine/SimpleCV/zipball/master'
-                            '/usr/local/bin/pip --no-cache-dir install timeout-decorator svgwrite https://github.com/Locbit/locbit-edge/zipball/master'
+                            '/usr/local/bin/pip --no-cache-dir install timeout-decorator svgwrite https://github.com/sightmachine/SimpleCV/zipball/master',
+                            ''
                            ]
-
-                # '/usr/bin/git clone https://github.com/Locbit/locbit-edge.git /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge'
+                edge_path = os.path.exists('/home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge')
+                edge_get = 'unzip master.zip /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D'
+                zip_check = subprocess.check_call(['unzip', 'master.zip'], shell=True)
+                if edge_path != True:
+                        edge = Popen(['wget', 'https://github.com/Locbit/locbit-edge/archive/master.zip'], stdout=PIPE)
+                        self._logger.message(zip_check)
 
                 for command in commands:
                         subprocess.check_call("/bin/bash -c 'sudo {}'".format(command), shell=True)
