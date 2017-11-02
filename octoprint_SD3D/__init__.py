@@ -911,6 +911,15 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                 print('5' * 20 + "{}".format(self._settings.get(['macAddress'])))
         def edge_check():
                 edge_path = '/home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge'
+
+                from os import access, R_OK
+                from os.path import isfile
+
+                file =  str(edge_path)
+
+                assert isfile(file) and access(file, R_OK), \
+                self._logger.info("File {} doesn't exist or isn't readable".format(file))
+
                 path_check = os.path.isdir(edge_path)
                 edge_url = '/usr/bin/git clone https://github.com/Locbit/locbit-edge.git /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge'
                 start_check = self._settings.get(["did"])
