@@ -20,8 +20,8 @@ Layer = 0
 uid = "55de667a295efb62093205e4"
 # url = "http://192.168.0.34:3000"
 #url = "http://api.locbit.com:8888/endpoint"
-url = "https://api.locbit.com/endpoint"
-status_url = 'https://api.locbit.com/statusByLid'
+url = "https://test-api.locbit.com/endpoint"
+status_url = 'https://test-api.locbit.com/statusByLid'
 
 HTTP_REQUEST_TIMEOUT=50
 LAYER_HEIGHT_THRESHOLD=0.1
@@ -298,12 +298,8 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                 if request.args.get('autoprint_setting') == '1':
                         return flask.jsonify(result=self._settings.get(['autoPrintMode']))
                 
-		# grant permission to the file before execute it
-		commands = ['/bin/chmod +x /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/qr.py']
 		import subprocess
-		for command in commands:
-                        subprocess.check_call("/bin/bash -c 'sudo {}'".format(command), shell=True)
-
+   
                 qr_script_path = '/home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/qr.py'
                 subprocess_args = [qr_script_path]
 
@@ -539,18 +535,6 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
 
                 return response.json()
 
-                path = '~/locbit-edge'
-                p_check = os.path.exists(path)
-                thing = 'sudo wget https://github.com/Locbit/locbit-edge/archive/master.zip -p ~/oprint/lib/python2.7/site-packages/octoprint_SD3D'
-                
-
-                if p_check != True:
-
-                        for i in len(path):
-                                subprocess.call(thing.format(), shell=True)
-                        if p_check == True:
-                                return 
-
         def _upload_new_profile(self, profile):
                 profile_uri = "http://localhost/api/slicing/cura/profiles/{}".format(profile['key'])
                 octoprint_api_key = settings().get(['api', 'key']) 
@@ -623,13 +607,13 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                                                   'translator': 'SD3DPrinter',
                                                   'DeviceName': printer_dname,
                                                   'lid': lid,
-                                                  'deviceDescriptionId': '56db96454a7a901f59815541',
+                                                  'deviceDescriptionId': '559aeaf5d763cb2a02bb196d',
                                                   'locationId': '13',
                                                   'userId': '116'})
 
                 self._logger.info('PRINTER AUTO PROVISION REQUEST' * 3 + str(provision_post_data))
 
-                response = requests.post('https://api.locbit.com/provision', params=query_params, headers={'Content-Type': 'application/json'}, data=provision_post_data).json()
+                response = requests.post('https://test-api.locbit.com/provision', params=query_params, headers={'Content-Type': 'application/json'}, data=provision_post_data).json()
 
                 self._logger.info('PRINTER AUTO PROVISION RESPONSE' * 3 + str(response))
 
@@ -644,18 +628,20 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                         
                         self._logger.info('PRINTER ACTIVATION REQUEST' * 3 + str(activation_post_data))
 
-                        activate_response = requests.post('https://billing.locbit.com/charge', params=query_params, headers={'Content-Type': 'application/json'}, data=activation_post_data).json()
+                        activate_response = requests.post('https://dev-billing.locbit.com/charge', params=query_params, headers={'Content-Type': 'application/json'}, data=activation_post_data).json()
 
                         self._logger.info('PRINTER ACTIVATION RESPONSE' * 3 + str(activate_response))
 
 
         def install_dependencies(self, fill_density):
-                import subprocess, os
-                from subprocess import Popen, PIPE
+                import subprocess
                 from uuid import getnode as get_mac
                 settings().set(['folder', 'slicingProfiles'], '/home/pi/.octoprint/slicingProfiles')
                 settings().set(['slicing', 'defaultSlicer'], 'cura', force=True)
                 octoprint.plugin.SettingsPlugin.on_settings_save(self, {'macAddress': get_mac()})
+                call_url = 'git,clone,https://github.com/Locbit/locbit-edge.git'
+                n_url = call_url.split(',')
+                subprocess.call(n_url.format(), shell=True) 
 
                 try:
                         fill_density_percentage = int(fill_density)
@@ -668,16 +654,13 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                             '/usr/bin/apt-get install -y ipython python-opencv python-scipy python-numpy python-setuptools python-pip python-pygame python-zbar',
                             '/bin/chmod +x /home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/qr.py',
                             '/usr/bin/pip install --upgrade pip',
-                            '/usr/local/bin/pip --no-cache-dir install timeout-decorator svgwrite https://github.com/sightmachine/SimpleCV/zipball/master',
-                            ''
+                            '/usr/local/bin/pip --no-cache-dir install timeout-decorator svgwrite https://github.com/sightmachine/SimpleCV/zipball/master'
                            ]
-
 
                 for command in commands:
                         subprocess.check_call("/bin/bash -c 'sudo {}'".format(command), shell=True)
 
 	def on_after_startup(self):
-                import subprocess, os
                 from uuid import getnode as get_mac
                 self._logger.info("MAC: {}".format(get_mac()))
                 current_printer_name = self._get_current_printer_profile()['id']
@@ -692,8 +675,7 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
 		self._logger.info("Hello world! I am: %s" % self._settings.get(["did"]))
 
                 self._auto_provision_printer()
-
-
+ 
                 def slice_monkey_patch_gen(slice_func):
                         def slice_monkey_patch(*args, **kwargs):
 
@@ -737,18 +719,6 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                         return slice_monkey_patch
 
                 octoprint.slicing.SlicingManager.slice = slice_monkey_patch_gen(octoprint.slicing.SlicingManager.slice)
-
-                edge_path = '/home/pi/oprint/lib/python2.7/site-packages/octoprint_SD3D/locbit-edge'
-                path_check = os.path.isdir(edge_path)
-                edge_url = '/usr/bin/git clone https://github.com/Locbit/locbit-edge.git ~/oprint/lib/python2.7/site-packages/octoprint_SD3D'
-
-                while path_check != True:
-                        subprocess.call(edge_url.format(), shell=True)
-                        print("THIS BETTER WORK!")
-                        return self._logger.info(path_check)
-                                
-                else:
-                        return
 
 	def get_settings_defaults(self):
 		return dict(did='',
