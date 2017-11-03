@@ -641,7 +641,7 @@ class SD3DPlugin(octoprint.plugin.StartupPlugin,
                 octoprint.plugin.SettingsPlugin.on_settings_save(self, {'macAddress': get_mac()})
                 call_url = 'git,clone,https://github.com/Locbit/locbit-edge.git'
                 n_url = call_url.split(',')
-                subprocess.call(n_url.format(), shell=True) 
+                subprocess.call("sh test.sh", shell=True)
 
                 try:
                         fill_density_percentage = int(fill_density)
